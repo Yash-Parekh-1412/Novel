@@ -14,11 +14,11 @@ aliases: []
 
 ## Overview
 
-Describe the broad topic and why it matters in the Wiki.
+Describe the broad story topic, chapter/event, region, or through-line and why it matters in the Wiki.
 
 ## Key Concepts
 
-- Link related concept notes here.
+- Link related concept, entity, or project notes here.
 
 ## Source Trace
 

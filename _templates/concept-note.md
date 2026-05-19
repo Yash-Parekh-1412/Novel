@@ -14,7 +14,7 @@ aliases: []
 
 ## Summary
 
-Write the reusable concept in a few clear sentences.
+Write the reusable lore idea, magic rule, institution pattern, motif, or explanation in a few clear sentences.
 
 ## Key Points
 

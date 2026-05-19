@@ -26,6 +26,9 @@ WIKI_FOLDERS = {
     "Logs": "log",
 }
 ALLOWED_TAGS = set(WIKI_FOLDERS.values())
+SOURCE_KINDS = {"chapter", "scene", "lore", "outline", "revision-note"}
+CANON_STATUSES = {"draft", "canon", "superseded", "deprecated", "non-canon"}
+ENTITY_TYPES = {"person", "location", "organization", "deity", "object", "species"}
 
 REQUIRED_FOLDERS = [
     RAW_SOURCES,
@@ -189,13 +192,16 @@ def catalog_entries() -> list[dict]:
         tags = [clean_tag(tag) for tag in as_list(frontmatter.get("tags"))]
         allowed = [tag for tag in tags if tag in ALLOWED_TAGS]
         tag = allowed[0] if allowed else (tags[0] if tags else "")
+        aliases = [str(item) for item in as_list(frontmatter.get("aliases"))]
         entries.append(
             {
                 "path": rel(path),
                 "title": note_title(path, frontmatter, body),
                 "tag": tag,
+                "entity_type": str(frontmatter.get("entity_type", "")) if tag == "entity" else "",
                 "topics": [str(item) for item in as_list(frontmatter.get("topics"))],
                 "sources": [str(item) for item in as_list(frontmatter.get("sources"))],
+                "aliases": aliases,
                 "updated": str(frontmatter.get("updated", "")),
             }
         )
@@ -227,6 +233,8 @@ def source_entries(accept_covered: bool = False) -> list[dict]:
             {
                 "path": source_path,
                 "title": str(frontmatter.get("Title") or note_title(path, frontmatter, body)),
+                "source_kind": str(frontmatter.get("SourceKind", "")),
+                "canon_status": str(frontmatter.get("CanonStatus", "")),
                 "processed": processed,
                 "covered_by": covered_by,
                 "updated": str(frontmatter.get("Updated") or frontmatter.get("Created") or ""),
@@ -289,10 +297,22 @@ def write_folder_indexes(entries: list[dict]) -> None:
             "",
         ]
         if folder_entries:
-            for entry in sorted(folder_entries, key=lambda item: item["title"].lower()):
-                name = Path(entry["path"]).name
-                updated = entry.get("updated") or "unknown date"
-                lines.append(f"- [{entry['title']}]({name}) - {expected_tag}, updated {updated}")
+            if folder == "Entities":
+                grouped: dict[str, list[dict]] = {}
+                for entry in folder_entries:
+                    entity_type = entry.get("entity_type") or "untyped"
+                    grouped.setdefault(entity_type, []).append(entry)
+                for entity_type in sorted(grouped):
+                    lines.extend(["", f"## {entity_type.replace('-', ' ').title()}", ""])
+                    for entry in sorted(grouped[entity_type], key=lambda item: item["title"].lower()):
+                        name = Path(entry["path"]).name
+                        updated = entry.get("updated") or "unknown date"
+                        lines.append(f"- [{entry['title']}]({name}) - {entity_type}, updated {updated}")
+            else:
+                for entry in sorted(folder_entries, key=lambda item: item["title"].lower()):
+                    name = Path(entry["path"]).name
+                    updated = entry.get("updated") or "unknown date"
+                    lines.append(f"- [{entry['title']}]({name}) - {expected_tag}, updated {updated}")
         else:
             lines.append("No notes yet.")
         write_text(base / "index.md", "\n".join(lines) + "\n")
@@ -406,6 +426,12 @@ def command_lint(_args) -> int:
             if issue:
                 problems.append(f"{note}: {issue}")
 
+        if path.parent == WIKI / "Entities":
+            entity_type = str(frontmatter.get("entity_type", "")).strip()
+            if entity_type not in ENTITY_TYPES:
+                allowed_types = ", ".join(sorted(ENTITY_TYPES))
+                problems.append(f"{note}: entity_type must be one of: {allowed_types}")
+
     if problems:
         for problem in problems:
             print(f"FAIL: {problem}")
@@ -443,7 +469,7 @@ def load_manifest() -> list[dict]:
 def command_source_lint(_args) -> int:
     problems = []
     coverage = coverage_map()
-    required = ["Title", "Reference", "Created", "Processed", "tags"]
+    required = ["Title", "Reference", "SourceKind", "CanonStatus", "Created", "Processed", "tags"]
 
     for path in raw_source_paths():
         frontmatter, _body = load_note(path)
@@ -457,6 +483,12 @@ def command_source_lint(_args) -> int:
         tags = [clean_tag(tag) for tag in as_list(frontmatter.get("tags"))]
         if "source" not in tags:
             problems.append(f"{note}: tags must include `source`")
+        source_kind = str(frontmatter.get("SourceKind", "")).strip()
+        if source_kind and source_kind not in SOURCE_KINDS:
+            problems.append(f"{note}: SourceKind must be one of: {', '.join(sorted(SOURCE_KINDS))}")
+        canon_status = str(frontmatter.get("CanonStatus", "")).strip()
+        if canon_status and canon_status not in CANON_STATUSES:
+            problems.append(f"{note}: CanonStatus must be one of: {', '.join(sorted(CANON_STATUSES))}")
         if bool(frontmatter.get("Processed")) and not coverage.get(note):
             problems.append(f"{note}: Processed is true but no compiled Wiki note covers it")
 
@@ -522,7 +554,9 @@ def command_search_catalog(args) -> int:
                 str(entry.get("path", "")),
                 str(entry.get("title", "")),
                 str(entry.get("tag", "")),
+                str(entry.get("entity_type", "")),
                 " ".join(str(item) for item in entry.get("topics", [])),
+                " ".join(str(item) for item in entry.get("aliases", [])),
                 " ".join(str(item) for item in entry.get("sources", [])),
             ]
         ).lower()

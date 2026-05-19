@@ -28,7 +28,7 @@ Generates:
 python3 scripts/wiki_tool.py lint
 ```
 
-Validates compiled Wiki note frontmatter, allowed tags, source links, and `source_count`.
+Validates compiled Wiki note frontmatter, allowed tags, typed entity metadata, source links, and `source_count`.
 
 ## Source Scan
 
@@ -48,7 +48,7 @@ python3 scripts/wiki_tool.py source-delta
 python3 scripts/wiki_tool.py source-coverage
 ```
 
-Use these commands to validate source frontmatter, compare Raw sources with the manifest, and inspect which Wiki notes cover each source.
+Use these commands to validate source frontmatter, source kinds, canon status, compare Raw sources with the manifest, and inspect which Wiki notes cover each source.
 
 ## Catalog Search
 
@@ -56,7 +56,7 @@ Use these commands to validate source frontmatter, compare Raw sources with the 
 python3 scripts/wiki_tool.py search-catalog --query "text"
 ```
 
-Searches compiled Wiki notes through `Wiki/catalog.jsonl`.
+Searches compiled Wiki notes through `Wiki/catalog.jsonl`, including aliases and entity types.
 
 ## Log
 

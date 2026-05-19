@@ -2,6 +2,12 @@
 Title: ""
 Author: ""
 Reference: ""
+SourceKind: chapter
+CanonStatus: draft
+Book: ""
+Chapter: ""
+Scene: ""
+LoreArea: ""
 ContentType:
   - "markdown"
 Created: YYYY-MM-DD
@@ -14,7 +20,7 @@ tags:
 
 ## Source Text
 
-Add the cleaned source material here.
+Add the chapter, scene, outline, or lore text here.
 
 ## Notes
 

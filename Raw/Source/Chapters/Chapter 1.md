@@ -2,6 +2,12 @@
 Title: "Chapter 1"
 Author: ""
 Reference: "local-draft"
+SourceKind: chapter
+CanonStatus: draft
+Book: ""
+Chapter: 1
+Scene: ""
+LoreArea: ""
 ContentType:
   - "markdown"
 Created: 2026-05-18

@@ -1,6 +1,6 @@
 ---
 name: llm-wiki-maintain
-description: Maintain the LLM Wiki catalog, indexes, source manifest, and logs.
+description: Maintain the novel Wiki catalog, indexes, source manifest, typed entities, and logs.
 ---
 
 # LLM Wiki Maintain
@@ -29,5 +29,6 @@ python3 scripts/audit_public.py
 ## Rules
 
 - Keep generated files consistent with the current Wiki.
+- Preserve the Raw manuscript and lore source layer as the source of truth.
 - Keep maintenance changes small and easy to review.
 - Do not create advanced or bonus folders unless the user explicitly asks.

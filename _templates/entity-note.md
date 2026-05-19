@@ -1,6 +1,7 @@
 ---
 tags:
   - "entity"
+entity_type: person
 topics: []
 status: seed
 created: YYYY-MM-DD
@@ -12,13 +13,25 @@ aliases: []
 
 # Entity Name
 
-## Summary
+## Canon Summary
 
-Describe the person, organization, place, work, or named object.
+Describe the entity as established by the linked chapter or lore sources.
 
-## Relevant Details
+## Known Facts
 
 - Add source-supported details here.
+
+## Relationships And Affiliations
+
+- Link related people, locations, organizations, deities, objects, or groups here.
+
+## Appearances
+
+- Note where this entity appears or is meaningfully mentioned.
+
+## Continuity Questions
+
+- Add unresolved or contradictory source-supported questions here.
 
 ## Source Trace
 

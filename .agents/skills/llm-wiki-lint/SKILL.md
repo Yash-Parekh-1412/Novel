@@ -1,6 +1,6 @@
 ---
 name: llm-wiki-lint
-description: Validate LLM Wiki structure, source links, frontmatter, and generated indexes.
+description: Validate novel Wiki structure, source links, typed entities, frontmatter, and generated indexes.
 ---
 
 # LLM Wiki Lint
@@ -30,6 +30,8 @@ python3 scripts/wiki_tool.py source-lint
 
 - Required folders exist.
 - Compiled Wiki notes use allowed tags.
+- Entity notes have a valid `entity_type`.
+- Raw sources have a valid `SourceKind`.
 - Source links point to existing files under `Raw/Sources/`.
 - `source_count` matches the number of sources.
 - Processed Raw sources have Wiki coverage.

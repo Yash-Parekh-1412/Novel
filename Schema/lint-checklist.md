@@ -5,7 +5,8 @@ Use this checklist before committing meaningful Wiki changes.
 ## Raw Sources
 
 - Raw source notes are under `Raw/Sources/`.
-- Each source has `Title`, `Reference`, `Created`, `Processed`, and `tags`.
+- Each source has `Title`, `Reference`, `SourceKind`, `CanonStatus`, `Created`, `Processed`, and `tags`.
+- `SourceKind` is one of `chapter`, `scene`, `lore`, `outline`, or `revision-note`.
 - Each source has the `source` tag.
 - A source marked `Processed: true` is covered by one or more compiled Wiki notes.
 
@@ -13,6 +14,7 @@ Use this checklist before committing meaningful Wiki changes.
 
 - Compiled notes are under `Wiki/`.
 - Each compiled note uses one allowed tag: `topic`, `concept`, `entity`, `project`, or `log`.
+- Each entity note has a valid `entity_type`.
 - Each compiled note has a `sources` list.
 - Each linked source exists under `Raw/Sources/`.
 - `source_count` equals the number of linked sources.
