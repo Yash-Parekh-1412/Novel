@@ -43,7 +43,8 @@ This vault uses a Raw/Wiki/Schema layout for a novel-planning LLM Wiki.
 
 ## Folder Roles
 
-- `Raw/Sources/`: manuscript chapters, scenes, outlines, and lore files with source frontmatter.
+- `Raw/Sources/Chapters/`: manuscript chapters
+- `Raw/Sources/Lore/`: lore files with source frontmatter.
 - `Raw/Files/`: attached files or local source assets that should not be committed by default.
 - `Wiki/Topics/`: broad story areas, chapter/event summaries, setting regions, and major through-lines.
 - `Wiki/Concepts/`: reusable lore ideas, magic rules, institutions-as-systems, motifs, and explanations.
