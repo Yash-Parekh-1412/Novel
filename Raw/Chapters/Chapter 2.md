@@ -1,3 +1,21 @@
+---
+Title: "Chapter 2"
+Author: ""
+Reference: "local-draft"
+SourceKind: chapter
+CanonStatus: draft
+Book: ""
+Chapter: 2
+Scene: ""
+LoreArea: ""
+ContentType:
+  - "markdown"
+Created: 2026-05-20
+Processed: false
+tags:
+  - "source"
+---
+
 Palendurio was built on an old karst landscape, so there were stone spires throughout the city that people had encircled with houses anchored into the rock, as well as large hills riddled with caves that had been colonized with structures. Professor Holvatti had gone on about it at some length in one of his lectures, but Mirian could only vaguely recall karst had something to do with limestone’s solubility and cave formations. Palendurio had a long history of holes opening up and swallowing buildings, until the city finally hired enough geomancers and construction crews to turn the cave system beneath the city into an underground canal network. Once in a while, there would still be a sinkhole, but it was much rarer.
 
 The Magrio River ran through the center of the city, dividing the canals into the northern and southern networks. In between the smaller delivery rafts moving in and out of the cave-canal system were larger barges, moving upriver with spell engines as they transported cargo that had arrived on the Riverport docks at the west end of the city.
