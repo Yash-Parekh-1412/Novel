@@ -12,7 +12,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-RAW_SOURCES = ROOT / "Raw" / "Sources"
+RAW_SOURCES = ROOT / "Raw" / "Chapters"
 WIKI = ROOT / "Wiki"
 SCHEMA = ROOT / "Schema"
 CATALOG = WIKI / "catalog.jsonl"
@@ -32,7 +32,7 @@ ENTITY_TYPES = {"person", "location", "organization", "deity", "object", "specie
 
 REQUIRED_FOLDERS = [
     RAW_SOURCES,
-    ROOT / "Raw" / "Files",
+    ROOT / "Raw" / "Lore",
     WIKI / "Topics",
     WIKI / "Concepts",
     WIKI / "Entities",

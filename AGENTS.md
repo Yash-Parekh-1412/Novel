@@ -4,7 +4,7 @@ This vault uses a Raw/Wiki/Schema layout for a novel-planning LLM Wiki.
 
 ## Core Rules
 
-- Treat `Raw/Chapter/` and `Raw/Lore` as the canon source layer for manuscript chapters, scenes, outlines, and separate lore files.
+- Treat `Raw/Chapters/` and `Raw/Lore/` as the canon source layer for manuscript chapters, scenes, outlines, and separate lore files.
 - Treat chapter drafts and lore notes as source material, not as compiled Wiki notes.
 - Write reusable continuity knowledge only under `Wiki/`.
 - Keep every compiled Wiki note linked to one or more Raw sources.
