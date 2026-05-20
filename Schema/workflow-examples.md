@@ -2,7 +2,7 @@
 
 ## Ingest A New Chapter Or Lore Source
 
-1. Add the chapter, scene, outline, or lore file to `Raw/Sources/`.
+1. Add the chapter, scene, outline, or lore file to `Raw/Chapters/` or `Raw/Lore`.
 2. Add source frontmatter using `_templates/source-note.md`.
 3. Search the existing catalog for related compiled notes:
 

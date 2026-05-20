@@ -12,8 +12,8 @@ Use clear filenames that are easy to search and stable over time.
 
 ## Folder Patterns
 
-- `Raw/Sources/Chapters/chapter-01.md`
-- `Raw/Sources/Lore/lore-subject.md`
+- `Raw/Chapters/chapter-01.md`
+- `Raw/Lore/lore-subject.md`
 - `Wiki/Topics/topic-name.md`
 - `Wiki/Concepts/concept-name.md`
 - `Wiki/Entities/entity-name.md`
@@ -32,14 +32,15 @@ Use repository-relative paths in frontmatter:
 
 ```yaml
 sources:
-  - Raw/Sources/example-source.md
-source_count: 1
+  - Raw/Chapters/example-source.md
+  - Raw/Lore/example-source2.md
+source_count: 2
 ```
 
 ## Fiction Examples
 
-- Chapter source: `Raw/Sources/Chapters/chapter-01.md`
-- Lore source: `Raw/Sources/Lore/luminate-order.md`
+- Chapter source: `Raw/Chapters/chapter-01.md`
+- Lore source: `Raw/Lore/luminate-order.md`
 - Person entity: `Wiki/Entities/mirian.md`
 - Location entity: `Wiki/Entities/hidden-temple-of-zomalator.md`
 - Organization entity: `Wiki/Entities/department-of-public-security.md`

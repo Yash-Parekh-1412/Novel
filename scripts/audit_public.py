@@ -12,7 +12,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 SKIP_PARTS = {
     ".git",
-    "Raw/Files",
+    "Raw/Chapters",
+    "Raw/Lore",
     "Drafts",
     ".obsidian/plugins",
     ".obsidian/cache",

@@ -4,7 +4,7 @@ Use frontmatter to keep Raw manuscript/lore sources and compiled Wiki notes mach
 
 ## Raw Source Notes
 
-Raw source notes live in `Raw/Sources/`. They are the source-of-truth layer for manuscript chapters, scenes, outlines, and separate lore files.
+Raw source notes live in `Raw/Chapters/` or  `Raw/Lore/`. They are the source-of-truth layer for manuscript chapters, scenes, outlines, and separate lore files.
 
 Required fields:
 
@@ -75,7 +75,7 @@ Allowed compiled note tags:
 Rules:
 
 - Use exactly one primary compiled note tag.
-- Keep `sources` as a list of paths under `Raw/Sources/`.
+- Keep `sources` as a list of paths under `Raw/Chapters/` or `Raw/Lore`.
 - Keep `source_count` equal to the number of items in `sources`.
 - Do not add claims that are not supported by the linked sources.
 - Update `updated` when changing a compiled note.

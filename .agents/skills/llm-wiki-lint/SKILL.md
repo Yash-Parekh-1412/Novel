@@ -32,7 +32,7 @@ python3 scripts/wiki_tool.py source-lint
 - Compiled Wiki notes use allowed tags.
 - Entity notes have a valid `entity_type`.
 - Raw sources have a valid `SourceKind`.
-- Source links point to existing files under `Raw/Sources/`.
+- Source links point to existing files under `Raw/Chapters/` or `Raw/Lore/`.
 - `source_count` matches the number of sources.
 - Processed Raw sources have Wiki coverage.
 - Generated catalog and index files are up to date.

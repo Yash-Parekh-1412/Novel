@@ -4,7 +4,7 @@ This vault uses a Raw/Wiki/Schema layout for a novel-planning LLM Wiki.
 
 ## Core Rules
 
-- Treat `Raw/Sources/` as the canon source layer for manuscript chapters, scenes, outlines, and separate lore files.
+- Treat `Raw/Chapter/` and `Raw/Lore` as the canon source layer for manuscript chapters, scenes, outlines, and separate lore files.
 - Treat chapter drafts and lore notes as source material, not as compiled Wiki notes.
 - Write reusable continuity knowledge only under `Wiki/`.
 - Keep every compiled Wiki note linked to one or more Raw sources.
@@ -43,9 +43,8 @@ This vault uses a Raw/Wiki/Schema layout for a novel-planning LLM Wiki.
 
 ## Folder Roles
 
-- `Raw/Sources/Chapters/`: manuscript chapters
-- `Raw/Sources/Lore/`: lore files with source frontmatter.
-- `Raw/Files/`: attached files or local source assets that should not be committed by default.
+- `Raw/Chapters/`: manuscript chapters
+- `Raw/Lore/`: lore files with source frontmatter.
 - `Wiki/Topics/`: broad story areas, chapter/event summaries, setting regions, and major through-lines.
 - `Wiki/Concepts/`: reusable lore ideas, magic rules, institutions-as-systems, motifs, and explanations.
 - `Wiki/Entities/`: typed canon entities such as people, locations, organizations, deities, objects, and species.

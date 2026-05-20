@@ -4,7 +4,7 @@ Use this checklist before committing meaningful Wiki changes.
 
 ## Raw Sources
 
-- Raw source notes are under `Raw/Sources/`.
+- Raw source notes are under `Raw/Chapters/` or `Raw/Lore`.
 - Each source has `Title`, `Reference`, `SourceKind`, `CanonStatus`, `Created`, `Processed`, and `tags`.
 - `SourceKind` is one of `chapter`, `scene`, `lore`, `outline`, or `revision-note`.
 - Each source has the `source` tag.
@@ -16,7 +16,7 @@ Use this checklist before committing meaningful Wiki changes.
 - Each compiled note uses one allowed tag: `topic`, `concept`, `entity`, `project`, or `log`.
 - Each entity note has a valid `entity_type`.
 - Each compiled note has a `sources` list.
-- Each linked source exists under `Raw/Sources/`.
+- Each linked source exists under `Raw/Chapters/` or `Raw/Lore`.
 - `source_count` equals the number of linked sources.
 - Claims are concise and supported by the linked source notes.
 

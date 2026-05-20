@@ -392,7 +392,7 @@ def validate_source_path(source: str) -> str | None:
     try:
         source_path.relative_to(RAW_SOURCES.resolve())
     except ValueError:
-        return f"source link is outside Raw/Sources: {source}"
+        return f"source link is outside Raw/Chapters/ or Raw/Lore/: {source}"
     if not source_path.is_file():
         return f"source link does not exist: {source}"
     return None

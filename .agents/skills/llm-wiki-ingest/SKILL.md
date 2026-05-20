@@ -5,7 +5,7 @@ description: Compile Raw manuscript and lore sources into concise, source-linked
 
 # LLM Wiki Ingest
 
-Use this skill when adding or processing manuscript chapters, scenes, outlines, or lore files from `Raw/Sources/`.
+Use this skill when adding or processing manuscript chapters, scenes, outlines, or lore files from `Raw/Chapters/` or `Raw/Lore/`.
 
 ## Workflow
 
