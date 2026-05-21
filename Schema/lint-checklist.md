@@ -19,6 +19,8 @@ Use this checklist before committing meaningful Wiki changes.
 - Each linked source exists under `Raw/Chapters/` or `Raw/Lore`.
 - `source_count` equals the number of linked sources.
 - Claims are concise and supported by the linked source notes.
+- `build` has been run so graph-link sections are present where required (`wiki-graph:sources`, `wiki-graph:chapter`, `wiki-graph:compiled`, `wiki-graph:chapter-hub`, `wiki-graph:coverage`).
+- Each ingested chapter has a `Wiki/Topics/chapter-NN-short-title.md` topic note citing the Raw chapter.
 
 ## Generated Files
 

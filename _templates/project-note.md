@@ -20,6 +20,16 @@ Describe what this project note tracks.
 
 - Add source-supported project details here.
 
+## Chapter
+
+`build` links chapter topic notes that share the same Raw source.
+
+<!-- wiki-graph:chapter -->
+<!-- /wiki-graph:chapter -->
+
 ## Source Trace
 
-Sources are listed in the frontmatter.
+Sources are listed in the frontmatter. `build` keeps wikilinks here for the Obsidian graph.
+
+<!-- wiki-graph:sources -->
+<!-- /wiki-graph:sources -->

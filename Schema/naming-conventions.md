@@ -37,9 +37,18 @@ sources:
 source_count: 2
 ```
 
+## Chapter Topic Hubs
+
+When ingesting a manuscript chapter, add one topic note that acts as the graph hub for that chapter:
+
+- Filename: `Wiki/Topics/chapter-NN-short-title.md` (the `chapter-` prefix lets `build` prefer this hub).
+- Frontmatter `sources` must include the matching Raw chapter path.
+- `build` adds wikilinks so the Raw chapter, chapter topic, and all compiled notes for that source connect in Obsidian’s graph.
+
 ## Fiction Examples
 
 - Chapter source: `Raw/Chapters/chapter-01.md`
+- Chapter topic hub: `Wiki/Topics/chapter-01-zomalator-temple.md`
 - Lore source: `Raw/Lore/luminate-order.md`
 - Person entity: `Wiki/Entities/mirian.md`
 - Location entity: `Wiki/Entities/hidden-temple-of-zomalator.md`

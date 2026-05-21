@@ -10,7 +10,7 @@ Use this skill for routine upkeep of the LLM Wiki.
 ## Workflow
 
 1. Run `doctor` to inspect the current state.
-2. Run `build` after Wiki note changes.
+2. Run `build` after Wiki note changes (also refreshes Obsidian graph wikilinks between Raw sources and compiled notes).
 3. Run `source-scan --update --accept-covered` after source ingestion.
 4. Run `lint` and `source-lint` before committing.
 5. Add a short log entry for meaningful maintenance or ingest work.

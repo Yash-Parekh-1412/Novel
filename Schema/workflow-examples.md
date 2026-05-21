@@ -12,9 +12,10 @@ python3 scripts/wiki_tool.py search-catalog --query "topic words"
 
 4. Open the most relevant Wiki notes.
 5. Create or update focused notes under `Wiki/`.
-6. For people, locations, organizations, deities, objects, and species, update or create typed entity notes under `Wiki/Entities/`.
-7. Link each compiled note back to one or more Raw sources.
-8. Rebuild indexes and validate:
+6. Create or update one chapter topic note under `Wiki/Topics/` per chapter, named `chapter-NN-short-title.md`, citing the Raw chapter in `sources`.
+7. For people, locations, organizations, deities, objects, and species, update or create typed entity notes under `Wiki/Entities/`.
+8. Link each compiled note from that chapter to the same Raw source in `sources`.
+9. Rebuild indexes and graph wikilinks, then validate:
 
 ```bash
 python3 scripts/wiki_tool.py build

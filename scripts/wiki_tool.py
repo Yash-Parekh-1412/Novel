@@ -12,7 +12,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-RAW_SOURCES = ROOT / "Raw" / "Chapters"
+RAW_CHAPTERS = ROOT / "Raw" / "Chapters"
+RAW_LORE = ROOT / "Raw" / "Lore"
+RAW_SOURCE_ROOTS = (RAW_CHAPTERS, RAW_LORE)
 WIKI = ROOT / "Wiki"
 SCHEMA = ROOT / "Schema"
 CATALOG = WIKI / "catalog.jsonl"
@@ -31,8 +33,8 @@ CANON_STATUSES = {"draft", "canon", "superseded", "deprecated", "non-canon"}
 ENTITY_TYPES = {"person", "location", "organization", "deity", "object", "species"}
 
 REQUIRED_FOLDERS = [
-    RAW_SOURCES,
-    ROOT / "Raw" / "Lore",
+    RAW_CHAPTERS,
+    RAW_LORE,
     WIKI / "Topics",
     WIKI / "Concepts",
     WIKI / "Entities",
@@ -176,12 +178,152 @@ def compiled_note_paths() -> list[Path]:
 
 
 def raw_source_paths() -> list[Path]:
-    if not RAW_SOURCES.exists():
-        return []
-    return sorted(
-        [path for path in RAW_SOURCES.rglob("*.md") if path.name != ".gitkeep"],
-        key=lambda item: rel(item).lower(),
-    )
+    paths: list[Path] = []
+    for base in RAW_SOURCE_ROOTS:
+        if not base.exists():
+            continue
+        paths.extend(path for path in base.rglob("*.md") if path.name != ".gitkeep")
+    return sorted(paths, key=lambda item: rel(item).lower())
+
+
+def path_to_wikilink(path_value: str) -> str:
+    return f"[[{Path(path_value).stem}]]"
+
+
+def extract_frontmatter_block(text: str) -> tuple[str | None, str]:
+    lines = text.splitlines()
+    if not lines or lines[0].strip() != "---":
+        return None, text
+    for index in range(1, len(lines)):
+        if lines[index].strip() == "---":
+            block = "\n".join(lines[: index + 1]) + "\n"
+            body = "\n".join(lines[index + 1 :])
+            return block, body
+    return None, text
+
+
+def upsert_managed_section(body: str, heading: str, marker: str, lines: list[str]) -> str:
+    start_marker = f"<!-- {marker} -->"
+    end_marker = f"<!-- /{marker} -->"
+    inner = "\n".join(lines)
+    block = f"{start_marker}\n{inner}\n{end_marker}" if inner else f"{start_marker}\n{end_marker}"
+    pattern = re.compile(rf"{re.escape(start_marker)}.*?{re.escape(end_marker)}", re.DOTALL)
+    if pattern.search(body):
+        return pattern.sub(block, body, count=1)
+    section = f"\n\n{heading}\n\n{block}\n"
+    return body.rstrip() + section + "\n"
+
+
+def update_note_body(path: Path, new_body: str) -> bool:
+    text = read_text(path)
+    frontmatter_block, _old_body = extract_frontmatter_block(text)
+    normalized = new_body.strip() + "\n"
+    current_body = extract_frontmatter_block(text)[1].strip() + "\n"
+    if current_body == normalized:
+        return False
+    if frontmatter_block:
+        write_text(path, frontmatter_block + normalized)
+    else:
+        write_text(path, normalized)
+    return True
+
+
+def topic_hubs_for_source(source: str, entries: list[dict]) -> list[str]:
+    hubs = [entry["path"] for entry in entries if source in entry.get("sources", []) and entry.get("tag") == "topic"]
+    chapter_hubs = [path for path in hubs if "chapter-" in Path(path).stem.lower()]
+    if chapter_hubs:
+        return sorted(chapter_hubs)
+    return sorted(hubs)
+
+
+def is_chapter_like_source(frontmatter: dict | None) -> bool:
+    if not frontmatter:
+        return False
+    return str(frontmatter.get("SourceKind", "")).strip() in {"chapter", "scene"}
+
+
+def compiled_notes_for_sources(
+    sources: list[str],
+    coverage: dict[str, list[str]],
+    *,
+    exclude: str | None = None,
+) -> list[str]:
+    seen: set[str] = set()
+    compiled: list[str] = []
+    for source in sources:
+        for note_path in coverage.get(source, []):
+            if note_path == exclude or note_path in seen:
+                continue
+            seen.add(note_path)
+            compiled.append(note_path)
+    return sorted(compiled)
+
+
+def is_chapter_hub(note_path: str, sources: list[str], entries: list[dict]) -> bool:
+    return any(note_path in topic_hubs_for_source(source, entries) for source in sources)
+
+
+def sync_graph_links(entries: list[dict] | None = None) -> int:
+    entries = entries or catalog_entries()
+    coverage = coverage_map()
+    by_path = {entry["path"]: entry for entry in entries}
+    updated = 0
+
+    for path in raw_source_paths():
+        source = rel(path)
+        covering = coverage.get(source, [])
+        frontmatter, body = load_note(path)
+        link_lines = [f"- {path_to_wikilink(note_path)}" for note_path in sorted(covering)]
+        if not link_lines:
+            link_lines = ["- _(no compiled Wiki coverage yet)_"]
+        new_body = upsert_managed_section(body, "## Wiki coverage", "wiki-graph:coverage", link_lines)
+
+        if is_chapter_like_source(frontmatter):
+            hubs = topic_hubs_for_source(source, entries)
+            if hubs:
+                hub_lines = [f"- {path_to_wikilink(hub)}" for hub in hubs]
+            else:
+                hub_lines = ["- _(no chapter topic note yet; create `Wiki/Topics/chapter-NN-short-title.md`)_"]
+            new_body = upsert_managed_section(new_body, "## Chapter hub", "wiki-graph:chapter-hub", hub_lines)
+
+        if update_note_body(path, new_body):
+            updated += 1
+
+    for path in compiled_note_paths():
+        note_path = rel(path)
+        entry = by_path.get(note_path)
+        if not entry:
+            continue
+        _frontmatter, body = load_note(path)
+        sources = entry.get("sources", [])
+        source_lines = [f"- {path_to_wikilink(source)}" for source in sorted(sources)]
+        new_body = upsert_managed_section(body, "## Source Trace", "wiki-graph:sources", source_lines)
+
+        if entry.get("tag") == "topic" and is_chapter_hub(note_path, sources, entries):
+            compiled = compiled_notes_for_sources(sources, coverage, exclude=note_path)
+            if compiled:
+                compiled_lines = [f"- {path_to_wikilink(note)}" for note in compiled]
+            else:
+                compiled_lines = ["- _(no other compiled notes for this chapter yet)_"]
+            new_body = upsert_managed_section(
+                new_body, "## Compiled notes", "wiki-graph:compiled", compiled_lines
+            )
+        elif entry.get("tag") != "topic":
+            chapter_links: list[str] = []
+            seen_hubs: set[str] = set()
+            for source in sources:
+                for hub in topic_hubs_for_source(source, entries):
+                    if hub == note_path or hub in seen_hubs:
+                        continue
+                    seen_hubs.add(hub)
+                    chapter_links.append(f"- {path_to_wikilink(hub)}")
+            if chapter_links:
+                new_body = upsert_managed_section(new_body, "## Chapter", "wiki-graph:chapter", chapter_links)
+
+        if update_note_body(path, new_body):
+            updated += 1
+
+    return updated
 
 
 def catalog_entries() -> list[dict]:
@@ -323,8 +465,10 @@ def command_build(_args) -> int:
     write_jsonl(CATALOG, entries)
     write_wiki_index(entries)
     write_folder_indexes(entries)
+    graph_updates = sync_graph_links(entries)
     print(f"Built {rel(CATALOG)} with {len(entries)} compiled notes.")
     print("Built Wiki indexes.")
+    print(f"Synced Obsidian graph links in {graph_updates} notes.")
     return 0
 
 
@@ -389,21 +533,36 @@ def command_doctor(_args) -> int:
 
 def validate_source_path(source: str) -> str | None:
     source_path = (ROOT / source).resolve()
-    try:
-        source_path.relative_to(RAW_SOURCES.resolve())
-    except ValueError:
+    if not any(
+        _is_under(source_path, base.resolve())
+        for base in RAW_SOURCE_ROOTS
+        if base.exists()
+    ):
         return f"source link is outside Raw/Chapters/ or Raw/Lore/: {source}"
     if not source_path.is_file():
         return f"source link does not exist: {source}"
     return None
 
 
+def _is_under(path: Path, base: Path) -> bool:
+    try:
+        path.relative_to(base)
+    except ValueError:
+        return False
+    return True
+
+
+def _has_managed_section(body: str, marker: str) -> bool:
+    return f"<!-- {marker} -->" in body and f"<!-- /{marker} -->" in body
+
+
 def command_lint(_args) -> int:
     problems = []
     required = ["tags", "topics", "status", "created", "updated", "sources", "source_count", "aliases"]
+    entries = catalog_entries()
 
     for path in compiled_note_paths():
-        frontmatter, _body = load_note(path)
+        frontmatter, body = load_note(path)
         note = rel(path)
         if frontmatter is None:
             problems.append(f"{note}: missing frontmatter")
@@ -431,6 +590,24 @@ def command_lint(_args) -> int:
             if entity_type not in ENTITY_TYPES:
                 allowed_types = ", ".join(sorted(ENTITY_TYPES))
                 problems.append(f"{note}: entity_type must be one of: {allowed_types}")
+
+        if len(allowed) == 1:
+            if sources and not _has_managed_section(body, "wiki-graph:sources"):
+                problems.append(f"{note}: missing wiki-graph:sources section; run `build` to sync graph links")
+            if allowed[0] == "topic" and is_chapter_hub(note, sources, entries):
+                if not _has_managed_section(body, "wiki-graph:compiled"):
+                    problems.append(
+                        f"{note}: missing wiki-graph:compiled section; run `build` to sync graph links"
+                    )
+            elif allowed[0] != "topic":
+                hubs: list[str] = []
+                for source in sources:
+                    hubs.extend(topic_hubs_for_source(source, entries))
+                unique_hubs = sorted({hub for hub in hubs if hub != note})
+                if unique_hubs and not _has_managed_section(body, "wiki-graph:chapter"):
+                    problems.append(
+                        f"{note}: missing wiki-graph:chapter section; run `build` to sync graph links"
+                    )
 
     if problems:
         for problem in problems:
@@ -468,6 +645,7 @@ def load_manifest() -> list[dict]:
 
 def command_source_lint(_args) -> int:
     problems = []
+    entries = catalog_entries()
     coverage = coverage_map()
     required = ["Title", "Reference", "SourceKind", "CanonStatus", "Created", "Processed", "tags"]
 
@@ -491,6 +669,12 @@ def command_source_lint(_args) -> int:
             problems.append(f"{note}: CanonStatus must be one of: {', '.join(sorted(CANON_STATUSES))}")
         if bool(frontmatter.get("Processed")) and not coverage.get(note):
             problems.append(f"{note}: Processed is true but no compiled Wiki note covers it")
+        _frontmatter, body = load_note(path)
+        if coverage.get(note) and not _has_managed_section(body, "wiki-graph:coverage"):
+            problems.append(f"{note}: missing wiki-graph:coverage section; run `build` to sync graph links")
+        if is_chapter_like_source(frontmatter) and topic_hubs_for_source(note, entries):
+            if not _has_managed_section(body, "wiki-graph:chapter-hub"):
+                problems.append(f"{note}: missing wiki-graph:chapter-hub section; run `build` to sync graph links")
 
     manifest_paths = {entry.get("path") for entry in load_manifest()}
     raw_paths = {rel(path) for path in raw_source_paths()}

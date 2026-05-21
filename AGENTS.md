@@ -8,6 +8,7 @@ This vault uses a Raw/Wiki/Schema layout for a novel-planning LLM Wiki.
 - Treat chapter drafts and lore notes as source material, not as compiled Wiki notes.
 - Write reusable continuity knowledge only under `Wiki/`.
 - Keep every compiled Wiki note linked to one or more Raw sources.
+- Run `build` after ingest so Raw sources and compiled notes stay connected with Obsidian wikilinks for graph view.
 - Search `Wiki/catalog.jsonl` before opening broad Raw context.
 - Run `build`, `lint`, and source checks before commits.
 - Do not invent citations, continuity, character facts, locations, organizations, or lore.
@@ -18,11 +19,23 @@ This vault uses a Raw/Wiki/Schema layout for a novel-planning LLM Wiki.
 1. Search compiled knowledge first.
 2. Open Raw chapter or lore sources only when the Wiki note is missing, unclear, stale, or needs verification.
 3. Compile source material into short, reusable notes under `Wiki/`.
-4. Update an existing entity note before creating a near-duplicate.
-5. Create entity notes for significant named people, locations, organizations, deities, and named objects that matter to continuity.
-6. Keep source paths in the note frontmatter `sources` list.
-7. Keep `source_count` equal to the number of linked sources.
-8. Rebuild indexes and run checks before committing.
+4. For each ingested chapter or scene, create or update one chapter topic note under `Wiki/Topics/` named `chapter-NN-short-title.md`, with the Raw chapter in `sources`.
+5. Update an existing entity note before creating a near-duplicate.
+6. Create entity notes for significant named people, locations, organizations, deities, and named objects that matter to continuity.
+7. Link every compiled note from that chapter (entities, concepts, projects) to the same Raw source in `sources`.
+8. Keep `source_count` equal to the number of linked sources.
+9. Run `build` so Obsidian graph wikilinks connect the Raw chapter, chapter topic hub, and compiled notes.
+10. Rebuild indexes and run checks before committing.
+
+## Chapter Graph Hub
+
+Obsidian’s graph follows body wikilinks, not YAML `sources`. After `build`:
+
+- The Raw chapter links to its chapter topic note (`## Chapter hub`) and to all compiled coverage (`## Wiki coverage`).
+- The chapter topic links back to the Raw source and to every other compiled note for that chapter (`## Compiled notes`).
+- Entities, concepts, and projects link to the chapter topic (`## Chapter`) and to their Raw sources (`## Source Trace`).
+
+Do not re-ingest old chapters just to add graph links; run `build` when you want managed sections refreshed.
 
 ## Entity Rules
 

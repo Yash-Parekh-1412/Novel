@@ -80,6 +80,18 @@ Rules:
 - Do not add claims that are not supported by the linked sources.
 - Update `updated` when changing a compiled note.
 
+## Obsidian Graph Links
+
+Frontmatter `sources` paths are for machines and lint. Obsidian’s graph view needs wikilinks in the note body.
+
+Run `python3 scripts/wiki_tool.py build` after ingest or Wiki edits. It updates managed sections marked with `<!-- wiki-graph:... -->`:
+
+- Raw chapter/scene sources: `wiki-graph:chapter-hub` under `## Chapter hub`, plus `wiki-graph:coverage` under `## Wiki coverage`
+- Chapter topic notes (`chapter-*` filenames citing that source): `wiki-graph:compiled` under `## Compiled notes`, plus `wiki-graph:sources` under `## Source Trace`
+- Other compiled notes tied to a chapter: `wiki-graph:chapter` under `## Chapter`, plus `wiki-graph:sources` under `## Source Trace`
+
+Wikilinks use note filenames without extension, for example `[[chapter-01]]` for `Raw/Chapters/chapter-01.md`.
+
 ## Entity Notes
 
 Entity notes live under `Wiki/Entities/` and use the compiled Wiki frontmatter plus `entity_type`.
